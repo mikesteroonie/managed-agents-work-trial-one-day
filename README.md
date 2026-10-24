@@ -20,12 +20,24 @@ Build this as a **Managed Agents** destination in the sidebar of an existing con
 
 Someone should be able to **create an agent, define its behavior, connect an inbox, and inspect the work triggered by incoming email**.
 
-The user should be able to:
+Keep agent configuration to three inputs:
 
-- Create and save agents with user-defined instructions, then connect them to an AgentMail inbox.
-- Have an incoming AgentMail `message.received` event trigger the appropriate agent through the execution harness.
-- Understand its progress, inspect its input, output and tool activity, and see when execution fails.
-- Return later and find saved agents and their results.
+- **Name:** a label that helps the user find the agent later.
+- **Instructions:** one Markdown document describing the task and any useful context. Support writing or pasting Markdown; a plain text editor is sufficient. Importing an `.md` file is optional.
+- **Inbox:** one existing AgentMail inbox whose incoming emails trigger the agent.
+
+Treat the model and available AgentMail tool capabilities as fixed for the trial. Make the capabilities understandable; provider selection, model settings, document management, and a tool-permissions editor are outside scope.
+
+Through the frontend, the user should be able to:
+
+- Create and save an agent with those inputs.
+- Find saved agents, reopen their configuration, and see their linked inbox and whether they are ready to receive email events.
+- Open the latest run and inspect its input, status, output, tool activity, and any execution error.
+- Refresh or return later without losing saved configuration or results.
+
+Incoming AgentMail `message.received` events should trigger the appropriate agent through the execution harness without a UI Run action.
+
+Latest-run inspection is sufficient; a run-history browser is not required.
 
 Demonstrate the builder with different user-defined instructions through the same creation, event-triggered execution, and inspection flow. We do not provide preset agent configurations.
 
@@ -43,13 +55,10 @@ Keep the infrastructure bounded: one existing workspace, AgentMail inboxes and e
 
 ## Questions to consider
 
-- What does a customer need to configure to create a useful agent? What can be handled for them?
-- How does a user connect an inbox and understand which incoming emails will trigger their agent?
-- Which concepts belong to the shared platform, and which belong in an agent's configuration?
-- How can someone understand what an unfamiliar agent did and whether it succeeded?
-- How does your system behave if an input arrives twice or an execution is retried?
-- What should happen when an agent's instructions or available tools change?
-- Can another use case fit without changing the application's schema or adding a dedicated workflow?
+- How will a first-time user understand what the agent can do and when it runs?
+- What should they see first when inspecting a result or failure?
+- Can different instructions work through the same product and data model?
+- What happens if an event arrives twice or execution fails?
 
 ## Working together
 
