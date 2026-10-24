@@ -1,64 +1,58 @@
 # Managed email agents
 
-AgentMail gives AI agents email inboxes. We want to make it easier for a developer to put an email agent to work without building the surrounding application themselves.
+Rho is an AgentMail customer. People on their team want to create email agents for their customers without having to build and host the surrounding agent infrastructure.
 
 ## The problem
 
-A working agent is only part of the experience. Someone still needs to configure it, give it an incoming email, understand what it produced, and figure out what happened when it failed.
+A billing agent could read an invoice and bring the right people into its email thread. A support agent could identify which engineer to CC. The model is one part of that experience: someone still has to configure the agent, connect its inbox, and understand what it did.
 
-We want to bring those pieces together into a product a developer can use with confidence.
+We want to make that experience usable as a product.
 
 ## Who is the customer?
 
-For this project, imagine the developer responsible for the support inbox at Northstar Desk, a small software company. They want an agent to prepare replies to customer emails using instructions they provide. They will review the drafts themselves.
+Build for a person on Rho's team setting up an agent for a customer. They know the workflow they want, but should not have to write and operate an agent service to get it running.
 
-They need a useful first result quickly, and enough context to decide whether they trust it. They should not have to read application logs to understand what happened.
-
-We've included [company context and example instructions](fixtures/company.md), along with synthetic emails. These are starting points for understanding the customer. Ask us for more context as you work.
+For this project, focus on a **billing agent that processes incoming invoices and identifies the people to CC in the thread**. The included [customer scenario](fixtures/company.md), invoice emails, and routing contacts are synthetic examples, not real Rho policies or customer data.
 
 ## What we'd like you to build
 
-Build the first version of a managed email agent experience: **configure an agent, give it an incoming email, and inspect its work.**
+Build the first version of a managed email agent experience: **configure an agent, process an invoice email, and understand its proposed action.**
 
-The developer should be able to:
+The user should be able to:
 
-- Create an agent with a name, instructions, and a connection to a provided inbox.
-- Process an example customer email and understand when work is underway.
-- Read the generated reply draft alongside the email it responds to.
-- See a clear failure state when execution does not succeed.
-- Return later and find the saved agent and its completed or failed runs.
+- Create an agent with instructions and a connection to a provided inbox.
+- Process an incoming invoice email using the supplied execution harness.
+- Inspect the invoice information, proposed reply, and selected CC recipients alongside the original email.
+- Understand what is happening and when execution has failed or needs attention.
+- Return later and find the saved configuration and results.
 
 ## Scope
 
-Build a working frontend and backend, with configuration and run outcomes persisted in Postgres. Validate the inputs your backend accepts. Use the supplied execution harness to produce the drafts.
+Build a working Next.js frontend and backend with application data persisted in Postgres. You own the schema, APIs, validation, and experience.
 
-You can execute the agent within a server request. Durable background jobs, automatic recovery, retry controls, and configuration history are outside this scope. Be ready to discuss what happens if execution is interrupted.
+Execution within a server request is acceptable. Decide how to handle failures and repeated input within the available time, and explain the limitations of your approach.
 
-Use one agent per inbox and the supplied synthetic emails. Real sending, authentication, billing, attachments, and deployment are outside this project.
+Use one customer workspace and the supplied invoice text; PDF extraction, payment execution, authentication, and deployment are outside scope. Produce a draft or record a simulated email action with the chosen CC recipients. Do not send real email. The support-agent example is context for discussing generalization, not another workflow to build.
 
 ## Questions to consider
 
-Use these to shape your approach and our opening conversation. You do not need to write an answer to every question.
-
-- What is the customer's actual goal, and how would they know this feature is helping?
-- Which emails can the agent answer directly, and which need clarification or a person? How should that affect the experience?
-- What does the customer need to configure before trying the agent? What can have a sensible default?
-- What information helps someone judge a result, and what would just add noise?
-- How do your choices about data, APIs, and execution support that experience?
-- Which parts of your approach would carry over to another email use case? What would you keep specific to reply drafting?
+- What does the person setting up this agent need to know, and what should happen automatically?
+- What would make them trust that the invoice reached the right people?
+- What should the product do when the owner is unclear or the invoice changes?
+- How does your system behave if the same event arrives twice or an execution is retried?
+- Which information belongs in the interface, and which belongs in diagnostic detail?
+- What would carry over to a support agent that identifies an engineer to CC?
 
 ## Working together
 
 Start by exploring the examples and sketching a user flow and technical approach. We'll discuss them together, then you will spend most of the session building.
 
-Use us as you would teammates: ask questions, challenge assumptions, and tell us when something blocks you. Before the end, we'll have someone try the product so you can observe where it works and where it needs an adjustment.
+Use us as teammates: ask questions, challenge assumptions, and tell us when something blocks you. Before the end, we'll have someone try the product so you can observe it and make an adjustment.
 
-At the end, show us the working experience and walk through the implementation and tradeoffs. Keep brief [design notes](DECISIONS.md) and the commands needed to run and check your work. A formal presentation is unnecessary.
-
-You may use AI tools, libraries, and existing components. Be ready to explain and modify what you build.
+At the end, show the working experience and walk through the decisions behind it. Keep brief [design notes](DECISIONS.md) and the commands needed to run and check your work. You may use AI tools, libraries, and existing components; be ready to explain and modify what you build.
 
 ## Development environment
 
-Use Next.js and TypeScript for the frontend, Postgres for application data, and the supplied local harness for agent execution. You choose the schema, data access library, application APIs, and interface.
+Use Next.js and TypeScript, Postgres, and the supplied local execution harness. We provide the starter, database access, model access, and synthetic inputs. You choose the application architecture.
 
-We provide the starter, database access, model access, and synthetic inputs. See [setup](docs/SETUP.md) and [the harness contract](docs/HARNESS.md) for their current preparation status. Keep credentials on the server and out of source control.
+See [setup](docs/SETUP.md) and [the harness contract](docs/HARNESS.md) for their preparation status. Keep credentials on the server and out of source control.
