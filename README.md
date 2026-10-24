@@ -18,7 +18,7 @@ Keep configuration to three inputs:
 - **Instructions:** one Markdown document containing the task and useful context. Support writing or pasting text; importing an `.md` file is optional.
 - **Inbox:** one existing AgentMail inbox whose incoming emails trigger the agent.
 
-The model and available AgentMail tools are fixed for the trial. Make their capabilities understandable without adding settings for them.
+The model and available AgentMail tools are fixed for the trial. Make their capabilities understandable without adding settings for them. You choose the interaction flow, guidance, validation feedback, and how much detail to expose.
 
 ### Frontend
 
@@ -31,13 +31,21 @@ Latest-run inspection is sufficient. Editing existing agents and pause/resume ar
 
 ### Backend
 
-- Build application APIs and a Postgres schema to create, list, and retrieve saved agents and their run data. You choose the route structure, validation, tables, and relationships.
+- Build application APIs and a Postgres schema to create, list, and retrieve saved agents and their latest run data. You choose the route structure, validation, tables, and relationships.
 - Use the supplied AgentMail client for inbox/message access and agent tool bindings. Implement webhook registration, the receiving endpoint, event parsing/validation, and inbox-to-agent routing using AgentMail's existing services.
 - Trigger the supplied execution harness from incoming events and persist results, status, tool activity, and failures for the UI. Execution must not depend on someone pressing Run.
 
-Execution within the local event-handler request is acceptable. Decide how repeated events, failures, and retries should behave; implement a coherent approach and explain its limits.
+Execution within the local event-handler request is acceptable.
 
 Create synthetic payloads matching the documented webhook contract and a small local replay script that posts them to your receiving endpoint. It should exercise the same event-handling path as live delivery. Local replay is sufficient for the demo; see the [AgentMail integration guide](docs/AGENTMAIL.md) for endpoints and testing details.
+
+### When an execution fails
+
+A customer relying on an agent needs to understand what happened and what they can do next when it fails.
+
+Implement **one meaningful execution-failure path end to end** using the supplied harness. Choose the case, such as a model or tool failure. Persist useful input/activity and failure information, and give the customer a clear explanation and a usable next step. You choose the recovery experience; automatic retry is not required.
+
+Be prepared to discuss what would happen if the execution process stopped before recording a result, or an event arrived again. Automatic crash recovery and concurrent duplicate-delivery guarantees are outside the required build.
 
 ## What we provide
 
@@ -51,10 +59,10 @@ Keep this to one existing workspace and email agents. Authentication, additional
 
 ## Questions to consider
 
-- How will someone understand what the agent can do and when it runs?
-- What should they see first when inspecting a result or failure?
-- Can different instructions work through the same product and data model?
-- What happens if an event arrives twice or execution fails?
+- How will someone know what the agent can do and whether it is ready?
+- What should they see first in a result, and which details should be available on demand?
+- Why do your data model and API boundaries fit this experience?
+- What can the customer safely do next after your chosen failure?
 
 ## Working together
 
