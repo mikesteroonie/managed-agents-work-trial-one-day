@@ -24,16 +24,16 @@ The model and available AgentMail tools are fixed for the trial. Make their capa
 
 - Create and save an agent with those three inputs.
 - List saved agents and reopen their configuration. Show the linked inbox and whether the agent is ready to receive email events.
-- Inspect the latest run: input, status, output, tool activity, and any error.
+- Show the latest run's status, final output, and an error if it failed.
 - Retain saved configuration and results after refreshing or returning later.
 
-Latest-run inspection is sufficient. Editing existing agents and pause/resume are outside this assignment.
+The latest outcome is sufficient. Editing existing agents and pause/resume are outside this assignment.
 
 ### Backend
 
 - Build application APIs and a Postgres schema to create, list, and retrieve saved agents and their latest run data. You choose the route structure, validation, tables, and relationships.
 - Use the supplied AgentMail client for inbox/message access and agent tool bindings. Implement webhook registration, the receiving endpoint, event parsing/validation, and inbox-to-agent routing using AgentMail's existing services.
-- Trigger the supplied execution harness from incoming events and persist results, status, tool activity, and failures for the UI. Execution must not depend on someone pressing Run.
+- Trigger the supplied execution harness from incoming events and persist the latest run's status, final output, and any terminal error for the UI. Execution must not depend on someone pressing Run.
 
 Execution within the local event-handler request is acceptable. You choose the execution architecture; a separate worker or queue is optional.
 
@@ -58,7 +58,7 @@ Keep this to one existing workspace and email agents. Authentication, additional
 ## Questions to consider
 
 - How will someone know what the agent can do and whether it is ready?
-- What should they see first in a result, and which details should be available on demand?
+- What should a customer understand from the latest result?
 - Why do your data model and API boundaries fit this experience?
 - Which edge cases matter most here, and what should the customer experience when they occur?
 
