@@ -35,17 +35,15 @@ Latest-run inspection is sufficient. Editing existing agents and pause/resume ar
 - Use the supplied AgentMail client for inbox/message access and agent tool bindings. Implement webhook registration, the receiving endpoint, event parsing/validation, and inbox-to-agent routing using AgentMail's existing services.
 - Trigger the supplied execution harness from incoming events and persist results, status, tool activity, and failures for the UI. Execution must not depend on someone pressing Run.
 
-Execution within the local event-handler request is acceptable.
+Execution within the local event-handler request is acceptable. You choose the execution architecture; a separate worker or queue is optional.
 
 Create synthetic payloads matching the documented webhook contract and a small local replay script that posts them to your receiving endpoint. It should exercise the same event-handling path as live delivery. Local replay is sufficient for the demo; see the [AgentMail integration guide](docs/AGENTMAIL.md) for endpoints and testing details.
 
-### When an execution fails
+### Product behavior
 
-A customer relying on an agent needs to understand what happened and what they can do next when it fails.
+Anticipate edge cases and failure modes across setup, saving, execution, and interpreting results. Prioritize those that matter for this product, implement appropriate behavior, and explain any remaining limitations. Keep the customer experience consistent with what the backend knows.
 
-Handle **one terminal run failure reported by the supplied harness**, from persisted application state to a clear explanation and usable next step in the UI. Retain useful input/activity and failure information. The harness owns the agent loop and recovery within it; you do not implement tool retries. A recovered tool error can still produce a successful run. You choose what the customer can do after a terminal failure; starting a new run is optional.
-
-Be prepared to discuss what would happen if the execution process stopped before recording a result, or an event arrived again. Automatic crash recovery and concurrent duplicate-delivery guarantees are outside the required build.
+The supplied harness owns the agent loop and recovery within it. You own the application around it, including how its outcomes are stored and presented.
 
 ## What we provide
 
@@ -62,7 +60,7 @@ Keep this to one existing workspace and email agents. Authentication, additional
 - How will someone know what the agent can do and whether it is ready?
 - What should they see first in a result, and which details should be available on demand?
 - Why do your data model and API boundaries fit this experience?
-- What can the customer safely do next after your chosen failure?
+- Which edge cases matter most here, and what should the customer experience when they occur?
 
 ## Working together
 
